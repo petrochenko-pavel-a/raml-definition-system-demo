@@ -4,25 +4,32 @@
   "private": false,
   "main": "dist/main.js",
   "scripts": {
-    "test-cov": " ./node_modules/.bin/istanbul cover _mocha tests/*Tests.js",
-    "build-browser": "./node_modules/.bin/webpack --entry ./src/browser.js  --output-path ./browser --output-filename bundle.js --verbose --profile --display-modules "
+    "compile": "rm -rf dist/ && ./node_modules/typescript/bin/tsc",
+    "build": "npm run compile",
+    "start": "budo app.js --live -- -t modelled-ui-transformer"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.26",
+    "babel-eslint": "^6.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "eslint": "^2.5.1",
+    "eslint-plugin-react": "^4.0.0",
+    "html-webpack-plugin": "^2.7.2",
+    "react-hot-loader": "^1.3.0",
+    "transfer-webpack-plugin": "^0.1.4",
+    "modelled-ui-transformer": "^0.0.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "browserify": "^13.0.0",
-    "escodegen": "^1.8.0",
-    "esprima": "^2.7.2",
-    "estraverse": "^4.2.0",
     "material-ui": "^0.15.0-alpha.2",
-    "raml-definition-system": "0.0.13",
-    "react": "^0.14.8",
-    "react-dom": "^0.14.8",
-    "react-tap-event-plugin": "^0.2.2",
-    "reflect-metadata": "^0.1.3",
-    "underscore": "^1.8.3",
-    "watch": "^0.17.1",
-    "watch-js": "0.0.7",
-    "watchify": "^3.7.0",
-    "watchjs": "0.0.0",
-    "xml2js": "^0.4.16"
+    "modelled-ui-transformer": "0.0.2",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3",
+    "react-tap-event-plugin": "^0.2.1",
+    "through2": "^2.0.1",
+    "watchjs": "0.0.0"
   }
 }

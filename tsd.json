@@ -43,12 +43,6 @@
     },
     "material-ui/material-ui.d.ts": {
       "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
-    },
-    "esprima/esprima.d.ts": {
-      "commit": "ec9eb4b28c74665a602c22db3457f0a76fa0fa23"
-    },
-    "estree/estree.d.ts": {
-      "commit": "7de6c3dd94feaeb21f20054b9f30d5dabc5efabd"
     }
   }
 }
