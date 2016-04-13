@@ -106,7 +106,7 @@ class GroupedListSection extends React.Component<{bindTo:Group,selected:any, lab
         });
         console.log(result);
 
-        return <ListItem primaryText={this.props.bindTo.title} initiallyOpen={true}
+        return <ListItem primaryText={this.props.bindTo.title} initiallyOpen={this.props.bindTo.title=="Essentials"}
                          primaryTogglesNestedList={true} nestedItems={result}>
         </ListItem>;
     }
@@ -118,7 +118,9 @@ interface Group{
 
 function buildGroups(items:any[],f:(o:any)=>string):Group[]{
     var holder:{ [title:string]:Group}={};
-
+    holder["Essentials"]={ title:"Essentials",items:[]};
+    holder["Modularization & Reusability"]={ title:"Modularization & Reusability",items:[]};
+    holder["Security"]={ title:"Security",items:[]};
     items.forEach(x=>{
         var groupTitle=f(x);
         if (holder[groupTitle]){
@@ -145,24 +147,25 @@ class GroupedList extends React.Component<{bindTo:any[],selected:any, labelProvi
     }
 }
 const Essentials=["Api","Resource","Method","Response","TypeDeclaration"]
-const SuperTypes=["MethodBase","ResourceBase","HasNormalParameters","LibraryBase","RAMLLanguageElement","TypeInstance","TypeInstanceProperty"]
+const SuperTypes=["MethodBase","ResourceBase","HasNormalParameters","LibraryBase","RAMLLanguageElement","TypeInstance","TypeInstanceProperty","ModelLocation","LocationKind"]
 
 const Modularization=["Trait","ResourceType","Library","Overlay","Extension"]
 function simpleGroupFunction(t:rd.ITypeDefinition):string{
-    if (t.isValueType()){
-        return "Value Types";
-    }
+
     if (Essentials.indexOf(t.nameId())!=-1){
         return "Essentials"
     }
     if (t.isAssignableFrom("TypeDeclaration")){
-        return "Types";
+        return "Particular type kinds";
     }
     if (SuperTypes.indexOf(t.nameId())!=-1){
         return "Abstract & System Types"
     }
     if (Modularization.indexOf(t.nameId())!=-1){
         return "Modularization & Reusability"
+    }
+    if (t.isValueType()){
+        return "Value Types";
     }
     if (t.nameId().indexOf("Security")!=-1){
         return "Security";
@@ -177,6 +180,7 @@ function TypeView(obj:{type:rd.IType,handler:EventHandler}){
     }
     return <div style={{marginLeft:"1em"}}>
         <h1>{obj.type.nameId()}</h1>
+        <div>{obj.type.description()}</div>
         <TypeSuperTypes type={obj.type.superTypes()} handler={obj.handler} title="Super Types"/>
         <TypeSuperTypes type={obj.type.subTypes()} handler={obj.handler} title="Sub Types"/>
         <PropertiesTable props={obj.type.properties()} handler={obj.handler} title="Declared Properties"/>
@@ -233,7 +237,7 @@ function PropertiesTable(obj:{props:rd.IProperty[],handler:EventHandler, title: 
     if (obj.props.length==0){
         return <div/>
     }
-    return <Card expandable={true} >
+    return <Card expandable={true} initiallyExpanded={true}>
         <CardHeader title={obj.title} showExpandableButton={true} actAsExpander={true}/>
         <CardText expandable={true}>
             <Table selectable={false}>
@@ -248,13 +252,17 @@ function PropertiesTable(obj:{props:rd.IProperty[],handler:EventHandler, title: 
                         <TableHeaderColumn>
                             <b>Owner</b>
                         </TableHeaderColumn>
+                        <TableHeaderColumn colSpan={2}>
+                            <b>Description</b>
+                        </TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false}>
                     {obj.props.map(x=><TableRow selectable={false} >
                         <TableRowColumn  ><b>{renderPropName(x)}</b></TableRowColumn>
                         <TableRowColumn><a style={{color: "blue", cursor:"pointer", textDecoration:"underline"}} onClick={e=>obj.handler(x.range())}>{rangeLabel(x)}</a></TableRowColumn>
-                        <TableRowColumn><a style={{color: "blue", cursor:"pointer", textDecoration:"underline"}} onClick={e=>obj.handler(x.range())}>{x.domain().nameId()}</a></TableRowColumn>
+                        <TableRowColumn ><a style={{color: "blue", cursor:"pointer", textDecoration:"underline"}} onClick={e=>obj.handler(x.range())}>{x.domain().nameId()}</a></TableRowColumn>
+                        <TableRowColumn colSpan={3}><div style={{ wordWrap:"normal",whiteSpace: "normal"}}>{x.description()}</div></TableRowColumn>
                     </TableRow>)}
                 </TableBody>
             </Table>
@@ -264,7 +272,7 @@ function PropertiesTable(obj:{props:rd.IProperty[],handler:EventHandler, title: 
 
 class App extends React.Component<void,void>{
 
-    s:any
+    s:any=universe.type("Api")
     onClick(x:any){
         this.s=x;
         this.forceUpdate();

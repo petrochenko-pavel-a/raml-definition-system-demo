@@ -1,21 +1,15 @@
 {
   "name": "raml-definition-system-demo",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "main": "dist/main.js",
   "scripts": {
     "compile": "rm -rf dist/ && ./node_modules/typescript/bin/tsc",
     "build": "npm run compile",
-    "start": "budo app.js --live -- -t modelled-ui-transformer"
+    "start": "budo app.js --live -- -t modelled-ui-transformer",
+    "build-production": "webpack --config webpack-production.config.js --progress --colors"
   },
   "devDependencies": {
-    "babel-core": "^6.3.26",
-    "babel-eslint": "^6.0.0",
-    "babel-loader": "^6.2.4",
-    "babel-preset-es2015": "^6.3.13",
-    "babel-preset-react": "^6.3.13",
-    "eslint": "^2.5.1",
-    "eslint-plugin-react": "^4.0.0",
     "html-webpack-plugin": "^2.7.2",
     "react-hot-loader": "^1.3.0",
     "transfer-webpack-plugin": "^0.1.4",
@@ -24,8 +18,10 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "json-loader": "^0.5.4",
     "material-ui": "^0.15.0-alpha.2",
     "modelled-ui-transformer": "0.0.2",
+    "raml-definition-system": "0.0.15",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
     "react-tap-event-plugin": "^0.2.1",
